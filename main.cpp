@@ -34,15 +34,16 @@ int main(){
         
         dayObj.daysLeftForOrder = daysLeft;
 
-        if (dayObj.inventory >= orderThreshold ) {
+        if (dayObj.inventory > orderThreshold ) {
             dayObj.orderMessage = "";
             daysLeft = 14;
+            dayObj.reorder = false;
         }
-        else if (dayObj.inventory <= orderThreshold) {
+        if (dayObj.inventory <= orderThreshold) {
             dayObj.reorder = true;
             dayObj.orderMessage = "under Threshold ordering more";
             daysLeft -= 1;
-            dayObj.order(orderAmount);
+            dayObj.order(orderThreshold, orderAmount, daysLeft);
         }
 
         if (dayObj.inventory <= 0) {
@@ -51,6 +52,7 @@ int main(){
         
         TotalInventory += dayObj.inventory;
         dayObj.printInfo();
+        std::cout << "|\n";
         days.push_back(dayObj);
 
     }

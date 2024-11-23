@@ -14,18 +14,22 @@ class Day{
             std::cout << "Inventory: " << inventory << "\n";
             std::cout << "demand: " << demand << "\n";
             std::cout << orderMessage << "\n";
-            if (daysLeftForOrder > 0 && reorder == true) {
+            if (daysLeftForOrder >= 2 && reorder == true) {
                 std::cout << "Days tell order arrives: " << daysLeftForOrder << "\n";
             
             }
         }
-        void order(int orderAmount){
+        void order(int orderThreshold, int orderAmount, int& daysLeft){
             //orderMessage = "under Threshold ordering more";
             //daysLeftForOrder -= 1;
-            if (daysLeftForOrder <= 0) {
-                inventory = (orderAmount - demand) + inventory;
-                orderMessage = "";
-                reorder = false;
+            if (daysLeftForOrder <= 1) {
+                daysLeft = 14;
+                inventory = std::max(0, (orderAmount - demand) + inventory);
+
+                if (inventory > orderThreshold) {
+                    orderMessage = "";
+                    reorder = false;
+                }
             }
         }
 
