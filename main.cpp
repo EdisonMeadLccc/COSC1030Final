@@ -11,6 +11,7 @@ int main(){
     int daysOut = 0;
     std::vector<Day> days;
 
+    //prompts user
     std::cout << "How many days: \n";
     std::cin >> numOfDays;
 
@@ -27,13 +28,18 @@ int main(){
     std::cin >> orderAmount;
 
 
+
     int daysLeft = 14;
+
+    // Main simulation
     for(dayObj.dayNum = 0; dayObj.dayNum < numOfDays; dayObj.dayNum++){
+        // Generate daily demand and calculates inventory after demand
         dayObj.demand = demand_generator(dayObj.dayNum+1, 1000);
         dayObj.inventory = std::max(0, dayObj.inventory - dayObj.demand);
         
         dayObj.daysLeftForOrder = daysLeft;
 
+        //tracking inventory levels 
         if (dayObj.inventory > orderThreshold ) {
             dayObj.orderMessage = "";
             daysLeft = 14;
@@ -51,8 +57,8 @@ int main(){
         }
         
         TotalInventory += dayObj.inventory;
-        dayObj.printInfo();
-        std::cout << "|\n";
+        //dayObj.printInfo();
+        //std::cout << "|\n";
         days.push_back(dayObj);
 
     }
