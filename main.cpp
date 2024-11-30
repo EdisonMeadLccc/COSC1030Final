@@ -5,9 +5,10 @@
 int main(){
 
     Day dayObj;
-    int numOfDays;
+    double numOfDays;
     int orderThreshold, userDay, orderAmount; 
     double TotalInventory;
+    double totalDemand;
     int daysOut = 0;
     std::vector<Day> days;
 
@@ -18,7 +19,7 @@ int main(){
     std::cout << "starting Inventory: \n";
     std::cin >> dayObj.inventory;
 
-    std::cout << "What day?: \n";
+    std::cout << "What day?(0 for all): \n";
     std::cin >> userDay;
 
     std::cout << "reorder threshold: \n";
@@ -32,41 +33,56 @@ int main(){
     int daysLeft = 14;
 
     // Main simulation
-    for(dayObj.dayNum = 0; dayObj.dayNum < numOfDays; dayObj.dayNum++){
+    for(dayObj.setDay(0); dayObj.getDay()< numOfDays; dayObj.nextDay()){
+
         // Generate daily demand and calculates inventory after demand
-        dayObj.demand = demand_generator(dayObj.dayNum+1, 1000);
-        dayObj.inventory = std::max(0, dayObj.inventory - dayObj.demand);
+        dayObj.setDemand();
+        //dayObj.demand = demand_generator(1000);
+
+        dayObj.CalcInventory();
+        //dayObj.inventory = std::max(0, dayObj.inventory - dayObj.demand);
         
-        dayObj.daysLeftForOrder = daysLeft;
+        dayObj.setDaysLeftForOrder(daysLeft);
+        //dayObj.daysLeftForOrder = daysLeft;
 
         //tracking inventory levels 
-        if (dayObj.inventory > orderThreshold ) {
-            dayObj.orderMessage = "";
-            daysLeft = 14;
-            dayObj.reorder = false;
+        if (dayObj.getInventory() > orderThreshold ) {
+            //dayObj.orderMessage = "";
+            dayObj.setDaysLeftForOrder(daysLeft);
+            //daysLeft = 14;
+            //dayObj.reorder = false;
         }
-        if (dayObj.inventory <= orderThreshold) {
-            dayObj.reorder = true;
-            dayObj.orderMessage = "under Threshold ordering more";
+        if (dayObj.getInventory() <= orderThreshold) {
+            //dayObj.reorder = true;
+            //dayObj.orderMessage = "under Threshold ordering more";
             daysLeft -= 1;
             dayObj.order(orderThreshold, orderAmount, daysLeft);
         }
 
-        if (dayObj.inventory <= 0) {
+        if (dayObj.getInventory() <= 0) {
             daysOut += 1;
         }
+
         
-        TotalInventory += dayObj.inventory;
-        //dayObj.printInfo();
-        //std::cout << "|\n";
-        days.push_back(dayObj);
+        TotalInventory += dayObj.getInventory();
+        totalDemand += dayObj.getDemand();
+
+
+        if (userDay == 0) {
+            dayObj.printInfo();
+            days.push_back(dayObj);
+        }
+
+
+        else if(userDay > 0) {
+            days[userDay-1].printInfo();
+        }
 
     }
 
-
-    days[userDay-1].printInfo();
     std::cout << "Days out of stock: " << daysOut << "\n";
     std::cout << "Average daily inventory level: " << TotalInventory/numOfDays << "\n";
+    std::cout << "suggested reorder threshold: " << suggestedThreshold(totalDemand/numOfDays) << "\n";
 
     return 0;
 }
