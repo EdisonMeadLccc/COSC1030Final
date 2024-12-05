@@ -1,16 +1,19 @@
 #include <iostream>
+#include <cmath>
+#include <vector>
 #include "stock_gererator.h"
 #ifndef day_H
 #define day_H
 
 class Day{
     private:
-    public:
         int dayNum, inventory, demand, daysLeftForOrder;
         bool reorder;
         std::string orderMessage = "";
+    
+    public:
 
-        // prints all days infor
+        // prints all days info
         void printInfo(){
             std::cout << "\n--Day: " << dayNum + 1 << "--\n";
             std::cout << "Inventory: " << inventory << "\n";
@@ -55,7 +58,7 @@ class Day{
         }
 
         void setDemand(){
-            this->demand = demand_generator(1000);
+            this->demand = demand_generator(1000, dayNum);
         }
 
         int getDemand(){
@@ -97,7 +100,17 @@ class Day{
                 }
             }
         }
+        
+        // calcs suggested reorder point
+        double suggestedThreshold(double totalDemand, std::vector<Day> Days){
+            double totalDeviation = 0;
+            for (int day = 0; day < Days.size(); ++day) {
+                totalDeviation += pow((Days[day].getDemand() - (totalDemand/Days.size())), 2);
+                }
 
-};
+            return ((totalDemand/Days.size()) * 14) + (1.65 * sqrt(totalDeviation/Days.size()) * sqrt(14));
+        }
+
+    };
 
 #endif

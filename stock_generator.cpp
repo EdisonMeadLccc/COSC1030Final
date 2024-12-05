@@ -1,8 +1,11 @@
 #include "stock_gererator.h"
-int demand_generator(int iter){
+#include <cmath>
+#include <cstdlib>
+int demand_generator(int iter, int day){
     int demand = 0;
 
     for(int c = 0; c < iter; ++c){
+        srand(time(0)*(day+1));
         demand += rand() % (1200 - 701) + 701;
 
     }
@@ -10,6 +13,3 @@ int demand_generator(int iter){
     return demand/iter;
 }
 
-double suggestedThreshold(int ADD){
-    return (ADD*14)+62;
-}

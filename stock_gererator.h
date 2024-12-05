@@ -3,8 +3,6 @@
 #ifndef demand_generator_H
 #define demand_generator_H
 
-    int demand_generator(int iter);
+    int demand_generator(int iter, int day);
     
-    double suggestedThreshold(int ADD);
-
 #endif
